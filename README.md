@@ -14,7 +14,7 @@
 [![Github Release](https://img.shields.io/github/v/release/1234567Yang/cf-proxy-ex)](https://github.com/1234567Yang/cf-proxy-ex/releases/latest)
 ![GitHub forks](https://img.shields.io/github/forks/1234567Yang/cf-proxy-ex)
 
-[💻 在线体验](#在线体验) &nbsp;| [⚒ 用法](#用法) &nbsp;| [🚀 快速开始](#快速开始) &nbsp;| [🔒 安全密码](#安全密码) &nbsp;| [📸 截图](#截图) &nbsp;| [📦 LICENSE](#license) &nbsp;| [📄 备注](#备注) &nbsp;| [👍 感谢](#感谢) &nbsp;| [⭐ Star History](#star-history)
+[💻 在线体验](#在线体验) &nbsp;| [⚒ 用法](#用法) &nbsp;| [🚀 快速开始](#快速开始) &nbsp;| [📸 截图](#截图) &nbsp;| [📦 LICENSE](#license) &nbsp;| [📄 备注](#备注) &nbsp;| [👍 感谢](#感谢) &nbsp;| [⭐ Star History](#star-history)
 
 
 Cloudflare超级代理，OpenAI/ChatGPT代理，Github加速，在线代理。现在已经支持多平台部署（因为改名为worker-proxy-ex太麻烦，于是保持原名）。
@@ -26,8 +26,6 @@ Cloudflare超级代理，OpenAI/ChatGPT代理，Github加速，在线代理。�
 
 
 # 在线体验
-
-密码 123
 
 ### 首页
 https://y.demo.lhyang.org/
@@ -44,7 +42,6 @@ https://y.demo.lhyang.org/https://www.google.com/maps
 
 
 # 快速开始
-* 在 1.4 版本后启动了默认[安全密码](#安全密码)，默认密码为 `123`，感谢 <ruby>Bolster<rp>（</rp><rt>da sha bi</rt><rp>）</rp></ruby> 给我整不会了。
 
 ![bolster](https://github.com/1234567Yang/cf-proxy-ex/blob/main/img/depoly/abuse_report.png)
 
@@ -61,10 +58,6 @@ https://y.demo.lhyang.org/https://www.google.com/maps
 
 > [!NOTE]  
 > 如果部署失败（重定向、报错 等），请参考 [FAQ](FAQ.md)
-
-# 安全密码
-安全密码利用Cookie，在设置了密码的情况下，会先检测是否有密码Cookie以及是否正确，如果不正确那么可以设置输入密码界面，或者直接403。密码Cookie默认名称为`passwordCookieName`，设置密码可以代码里搜索`const password = "";`并替换成你的密码。
-更详细的教程可以[点这里](https://github.com/1234567Yang/cf-proxy-ex/blob/main/security_password_tutorial.md)。
 
 # 截图
 ![Duckduckgo](img/duckduckgo.jpg)

@@ -54,4 +54,4 @@
 
 
 > [!TIP]
-> 如果你选择不开启安全密码，那么你可以转到 Website -> Security -> Bots -> 开启所有防护（Bot Fight Mode + Block AI bots）
+> 本项目未开启安全密码，建议转到 Website -> Security -> Bots -> 开启所有防护（Bot Fight Mode + Block AI bots）
