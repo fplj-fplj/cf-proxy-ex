@@ -9,48 +9,12 @@ export default {
 
 const str = "/";
 const lastVisitProxyCookie = "__PROXY_VISITEDSITE__";
-const passwordCookieName = "__PROXY_PWD__";
 const proxyHintCookieName = "__PROXY_HINT__";
-const password = "123";
-const showPasswordPage = true;
 const replaceUrlObj = "__location__yproxy__";
 
 var thisProxyServerUrlHttps;
 var thisProxyServerUrl_hostOnly;
 // const CSSReplace = ["https://", "http://"];
-const proxyHintInjection = `
-
-function toEntities(str) {
-return str.split("").map(ch => \`&#\${ch.charCodeAt(0)};\`).join("");
-}
-
-
-//---***========================================***---提示使用代理---***========================================***---
-
-setTimeout(() => {
-var hint = \`
-Warning: You are currently using a web proxy, so do not log in to any website. Click to close this hint. For further details, please visit the link below.
-警告：您当前正在使用网络代理，请勿登录任何网站。单击关闭此提示。详情请见以下链接。
-\`;
-
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-document.body.insertAdjacentHTML(
-  'afterbegin', 
-  \`<div style="position:fixed;left:0px;top:0px;width:100%;margin:0px;padding:0px;display:block;z-index:99999999999999999999999;user-select:none;cursor:pointer;" id="__PROXY_HINT_DIV__" onclick="document.getElementById('__PROXY_HINT_DIV__').remove();">
-    <span style="position:relative;display:block;width:calc(100% - 20px);min-height:30px;font-size:14px;color:yellow;background:rgb(180,0,0);text-align:center;border-radius:5px;padding-left:10px;padding-right:10px;padding-top:1px;padding-bottom:1px;">
-      \${toEntities(hint)}
-      <br>
-      <a href="https://github.com/1234567Yang/cf-proxy-ex/" style="color:rgb(250,250,180);">https://github.com/1234567Yang/cf-proxy-ex/</a>
-    </span>
-  </div>
-  \`
-);
-}else{
-alert(hint + "https://github.com/1234567Yang/cf-proxy-ex");
-}
-}, 5000);
-
-`;
 const httpRequestInjection = `
 
 //---***========================================***---information---***========================================***---
@@ -1073,41 +1037,6 @@ const mainPage = `
 </body>
 </html>
 `;
-const pwdPage = `
-<!DOCTYPE html>
-<html>
-    
-    <head>
-        <script>
-            function setPassword() {
-                try {
-                    var cookieDomain = window.location.hostname;
-                    var password = document.getElementById('password').value;
-                    var currentOrigin = window.location.origin;
-                    var oneWeekLater = new Date();
-                    oneWeekLater.setTime(oneWeekLater.getTime() + (7 * 24 * 60 * 60 * 1000)); // 一周的毫秒数
-                    document.cookie = "${passwordCookieName}" + "=" + password + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + cookieDomain;
-                    document.cookie = "${passwordCookieName}" + "=" + password + "; expires=" + oneWeekLater.toUTCString() + "; path=/; domain=" + cookieDomain;
-                } catch(e) {
-                    alert(e.message);
-                }
-                //window.location.href = currentOrigin + "?" + oneWeekLater.toUTCString();
-                location.reload();
-            }
-        </script>
-    </head>
-    
-    <body>
-        <div>
-            <input id="password" type="password" placeholder="Password">
-            <button onclick="setPassword()">
-                Submit
-            </button>
-        </div>
-    </body>
-
-</html>
-`;
 const redirectError = `
 <html><head></head><body><h2>Error while redirecting: the website you want to access to may contain wrong redirect information, and we can not parse the info</h2></body></html>
 `;
@@ -1128,29 +1057,11 @@ async function handleRequest(request) {
   }
 
   // =======================================================================================
-  // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 判断密码 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 获取Cookie *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   // =======================================================================================
 
   //获取所有cookie
   var siteCookie = request.headers.get('Cookie');
-
-
-  if (password != "") {
-    if (siteCookie != null && siteCookie != "") {
-      var pwd = getCook(passwordCookieName, siteCookie);
-      console.log(pwd);
-      if (pwd != null && pwd != "") {
-        if (pwd != password) {
-          return handleWrongPwd();
-        }
-      } else {
-        return handleWrongPwd();
-      }
-    } else {
-      return handleWrongPwd();
-    }
-
-  }
 
 
   // =======================================================================================
@@ -1424,7 +1335,6 @@ async function handleRequest(request) {
         // the proxy hint must be written as a single IIFE, or it will show error in example.com   idk what's wrong
         (function () {
           // proxy hint
-          ${((!hasProxyHintCook) ? proxyHintInjection : "")}
         })();
 
 
@@ -1764,13 +1674,6 @@ function isPosEmbed(html, pos) {
   }
   return false;
 
-}
-function handleWrongPwd() {
-  if (showPasswordPage) {
-    return getHTMLResponse(pwdPage);
-  } else {
-    return getHTMLResponse("<h1>403 Forbidden</h1><br>You do not have access to view this webpage.");
-  }
 }
 function getHTMLResponse(html) {
   return new Response(html, {
