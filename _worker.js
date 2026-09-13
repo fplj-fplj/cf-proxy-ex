@@ -9,10 +9,7 @@ export default {
 
 const str = "/";
 const lastVisitProxyCookie = "__PROXY_VISITEDSITE__";
-const passwordCookieName = "__PROXY_PWD__";
 const proxyHintCookieName = "__PROXY_HINT__";
-const password = "123";
-const showPasswordPage = true;
 const replaceUrlObj = "__location__yproxy__";
 
 var thisProxyServerUrlHttps;
@@ -1040,41 +1037,6 @@ const mainPage = `
 </body>
 </html>
 `;
-const pwdPage = `
-<!DOCTYPE html>
-<html>
-    
-    <head>
-        <script>
-            function setPassword() {
-                try {
-                    var cookieDomain = window.location.hostname;
-                    var password = document.getElementById('password').value;
-                    var currentOrigin = window.location.origin;
-                    var oneWeekLater = new Date();
-                    oneWeekLater.setTime(oneWeekLater.getTime() + (7 * 24 * 60 * 60 * 1000)); // 一周的毫秒数
-                    document.cookie = "${passwordCookieName}" + "=" + password + "; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + cookieDomain;
-                    document.cookie = "${passwordCookieName}" + "=" + password + "; expires=" + oneWeekLater.toUTCString() + "; path=/; domain=" + cookieDomain;
-                } catch(e) {
-                    alert(e.message);
-                }
-                //window.location.href = currentOrigin + "?" + oneWeekLater.toUTCString();
-                location.reload();
-            }
-        </script>
-    </head>
-    
-    <body>
-        <div>
-            <input id="password" type="password" placeholder="Password">
-            <button onclick="setPassword()">
-                Submit
-            </button>
-        </div>
-    </body>
-
-</html>
-`;
 const redirectError = `
 <html><head></head><body><h2>Error while redirecting: the website you want to access to may contain wrong redirect information, and we can not parse the info</h2></body></html>
 `;
@@ -1095,29 +1057,11 @@ async function handleRequest(request) {
   }
 
   // =======================================================================================
-  // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 判断密码 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+  // *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* 获取Cookie *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   // =======================================================================================
 
   //获取所有cookie
   var siteCookie = request.headers.get('Cookie');
-
-
-  if (password != "") {
-    if (siteCookie != null && siteCookie != "") {
-      var pwd = getCook(passwordCookieName, siteCookie);
-      console.log(pwd);
-      if (pwd != null && pwd != "") {
-        if (pwd != password) {
-          return handleWrongPwd();
-        }
-      } else {
-        return handleWrongPwd();
-      }
-    } else {
-      return handleWrongPwd();
-    }
-
-  }
 
 
   // =======================================================================================
@@ -1730,13 +1674,6 @@ function isPosEmbed(html, pos) {
   }
   return false;
 
-}
-function handleWrongPwd() {
-  if (showPasswordPage) {
-    return getHTMLResponse(pwdPage);
-  } else {
-    return getHTMLResponse("<h1>403 Forbidden</h1><br>You do not have access to view this webpage.");
-  }
 }
 function getHTMLResponse(html) {
   return new Response(html, {
